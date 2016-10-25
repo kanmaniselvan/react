@@ -227,15 +227,49 @@ class Product extends React.Component {
 	}
 
 	render() {
+		var addButtonStyle = {
+			border: '1px solid #fb641b',
+			background: '#fb641b',
+			borderRadius: '2px',
+			cursor: 'pointer',
+			padding: '8px',
+			color: '#ffffff',
+			float: 'right',
+			marginRight: '10%'
+		}
+
+		var productName = {
+			fontWeight: 'bold',
+			fontSize: '20px',
+			color: '#070e3d',
+			fontVariant: 'small-caps',
+			marginBottom: '10px'
+		}
+
+		var priceStyle = {
+			marginLeft: '10px',
+			fontWeight: 'bold',
+			color: '#009b67'
+		}
+
+		var category = {
+			textTransform: 'capitalize'
+		}
+
+		var buttonContainer = {
+			color: '#888889',
+			fontWeight: 'bold',
+			fontSize: '12px'
+		}
+
 		return (
 
 		<div>
-			<span className='productName'>{this.props.product.name} </span>
-			<br />
-			<span>
-				<span className='productName'>{this.props.product.brand} </span> - <span className='productName'>{this.props.product.price} </span>
-				<button onClick={this.handleCartChange.bind(this)} ref='addToCartButton' value={this.props.product.sku}> Add to cart </button>
-			</span>
+			<span style={productName}>{this.props.product.name} </span> <span style={priceStyle}>₹{this.props.product.price} </span>
+			<div style={buttonContainer}>
+				<span >{this.props.product.brand} </span> - <span style={category}>{this.props.product.category} </span>
+				<button style={addButtonStyle} onClick={this.handleCartChange.bind(this)} ref='addToCartButton' value={this.props.product.sku}> Add to cart </button>
+			</div>
 			<br />
 			<br />
 		</div>
@@ -332,7 +366,6 @@ class Cart extends React.Component {
 
 				No. items: <span style={num_times}>{total_cart_items}</span> Total Price: <span style={totalPrice}>{total_price}</span>
 			<br />
-			<br />
 				{cart_products}
 			</div>
 			)
@@ -356,22 +389,24 @@ class CartProduct extends React.Component {
      			 }
 
 		      var addcartButton = {
-		       	background: '#029e00',
+		       	background: '#9aff99',
 		       	borderRadius: '50%',
-		       	border: 'none'
+		       	border: 'none',
+						cursor: 'pointer'
 		      }
 
 		      var removecartButton = {
-		       	background: '#ff3932',
+		       	background: '#ff8884',
 		       	borderRadius: '50%',
-		       	border: 'none'
+		       	border: 'none',
+						cursor: 'pointer'
 		      }
 
 					var outerBorder = {
-						border: '1px solid #bfbfbf',
+						borderBottom: '1px solid #bfbfbf',
 						padding: '5px',
 						marginLeft: '10px',
-						marginTop: '5px'
+						marginTop: '15px'
 					}
 
 					var productName = {
