@@ -105,7 +105,6 @@ class App extends React.Component {
 
 	var render_products = [];
    	for(var key in group_products) {
-   		render_products.push('---------------'+ key.toUpperCase() +' ----------------')
 			var category_products = group_products[key];
 
 			for(var i = 0; i < category_products.length; i++ ) {
@@ -114,12 +113,31 @@ class App extends React.Component {
 			}
    	}
 
+			var Appstyle = {
+					width: '60%',
+					borderRight: '1px solid #bfbfbf',
+					display: 'inline-block'
+			}
+
+			var cartStyle = {
+				width: '35%',
+				display: 'inline-block',
+				verticalAlign: 'top',
+				marginLeft: '4px'
+			}
+
+			var parentContainer = {
+				fontFamily: 'sans-serif'
+			}
+
       return (
-         <div>
-         	<Filter updateFilter={this.filterProductsByName.bind(this)} />
-            {render_products}
-            <hr />
-            <Cart product={this.state.cart_product}/>
+         <div style={parentContainer}>
+	         <div style={Appstyle}>
+	         	<Filter updateFilter={this.filterProductsByName.bind(this)} />
+	            {render_products}
+	         </div>
+            <Cart style={cartStyle} product={this.state.cart_product}/>
+						<hr />
          </div>
       );
    }
@@ -185,12 +203,19 @@ class Filter extends React.Component {
 	}
 
 	render() {
+		var filterStyle = {
+				float: 'right',
+				marginRight: '10px',
+				borderRadius: '8%',
+	    	padding: '4px',
+				border: '1px solid #bfbfbf'
+		}
+
 		return (
 			<div>
-				Filter Products <input ref='filterIp' onChange={this.handleFilterChange.bind(this)} />
+				<input style={filterStyle} ref='filterIp' placeholder='Filter products...' onChange={this.handleFilterChange.bind(this)} />
 				<br />
 				<br />
-				<hr />
 			</div>
 		)
 	}
@@ -287,13 +312,28 @@ class Cart extends React.Component {
 			total_cart_items += product.quantity
 		}
 
+		var num_times = {
+				fontSize: '20px',
+				fontWeight: 'bold',
+				marginLeft: '5px',
+				marginRight: '20px'
+		}
+
+		var totalPrice = {
+			fontSize: '26px',
+			fontWeight: 'bold',
+			marginLeft: '5px',
+			color: '#005104'
+		}
+
 		return (
-			<div>
-			<h3> Cart </h3>
-			{cart_products}
-				<span>Total items in the cart: {total_cart_items}</span>
-				<br />
-				<span className='totalPrice'>Total Price: {total_price}</span>
+			<div style={this.props.style}>
+			<h3> Items in Cart </h3>
+
+				No. items: <span style={num_times}>{total_cart_items}</span> Total Price: <span style={totalPrice}>{total_price}</span>
+			<br />
+			<br />
+				{cart_products}
 			</div>
 			)
 	}
@@ -311,17 +351,51 @@ class CartProduct extends React.Component {
 	}
 
 	render() {
+		  var container = {
+        			textAlign: 'center'
+     			 }
+
+		      var addcartButton = {
+		       	background: '#029e00',
+		       	borderRadius: '50%',
+		       	border: 'none'
+		      }
+
+		      var removecartButton = {
+		       	background: '#ff3932',
+		       	borderRadius: '50%',
+		       	border: 'none'
+		      }
+
+					var outerBorder = {
+						border: '1px solid #bfbfbf',
+						padding: '5px',
+						marginLeft: '10px',
+						marginTop: '5px'
+					}
+
+					var productName = {
+						fontSize: '17px',
+						fontWeight: 'bold',
+						color: '#361359'
+					}
+
+					var quantity = {
+						color: '#a8a8a8'
+					}
+
+					var quantityValue = {
+						color: '#7f7f7f'
+					}
 		return (
-			<div>
-				<span>Name: {this.props.product.name}</span>
+			<div style={outerBorder}>
+				<span style={productName}> {this.props.product.name}</span>
 				<br />
-				<span>Quantity: {this.props.product.quantity}</span>
+				<span style={quantity}>Quantity:</span> <span style={quantityValue}>{this.props.product.quantity}</span>
 				&nbsp; &nbsp;
-				<button ref="addQuantity" value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'add')}> +1 </button>
+				<button style={addcartButton} ref="addQuantity" value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'add')}>+</button>
 				&nbsp;
-				<button ref="removeQuantity" value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'remove')}> -1 </button>
-				 <br />
-				 _________
+				<button style={removecartButton} ref="removeQuantity" value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'remove')}>-</button>
 			</div>
 			)
 	}
