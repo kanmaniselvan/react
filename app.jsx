@@ -245,7 +245,9 @@ class Product extends React.Component {
             fontSize: '20px',
             color: '#070e3d',
             fontVariant: 'small-caps',
-            marginBottom: '10px'
+            marginBottom: '3px',
+            display: 'inline-block',
+            width: '150px'
         };
 
         let priceStyle = {
@@ -369,9 +371,16 @@ class Cart extends React.Component {
             color: '#005104'
         }
 
+        let cartTitle = {
+            background: '#000000',
+            color: '#ffffff',
+            padding: '5px',
+            textAlign: 'center'
+        }
+
         return (
 			<div style={this.props.style}>
-				<h3> Items in Cart </h3>
+				<h3 style={cartTitle}> Items in Cart </h3>
 
 				&nbsp; Total Items: <span style={num_times}>{total_cart_items}</span> Total Price: <span style={totalPrice}>{total_price}</span>
 				<br />
