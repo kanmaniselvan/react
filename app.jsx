@@ -287,7 +287,7 @@ class Cart extends React.Component {
     }
 
     // When cart component receives a props, that means new item is added to the cart
-    // Then check whether the product already exists, if it does then update only the
+    // Then check whether the product already exists, then update only the
     // quantity, else add with the quantity of 1.
     componentWillReceiveProps(next_props) {
         if(next_props.product === undefined) {
@@ -318,6 +318,9 @@ class Cart extends React.Component {
         this.setState({products: products})
     }
 
+    // Based on the clicked button, it will add or subtracts the
+    // quantity of the item.
+    // If the item quantity is 0, then its removed from the cart.
     updateCardProductsQuantity(product_sku, operation) {
         let products = this.state.products;
         let updated_products = [];
