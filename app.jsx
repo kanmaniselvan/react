@@ -129,12 +129,13 @@ class App extends React.Component {
         }
 
         let parentContainer = {
-            fontFamily: 'sans-serif'
+            fontFamily: 'sans-serif',
         }
 
         return (
-			<div style={parentContainer}>
+			<div unselectable="on" style={parentContainer}>
 				<div style={Appstyle}>
+                    <EvilInc />
 					<Filter updateFilter={this.filterProductsByName.bind(this)} />
                     {render_products}
 				</div>
@@ -200,21 +201,29 @@ App.defaultProps = {
 }
 
 class Filter extends React.Component {
-    handleFilterChange() {
-        this.props.updateFilter(this.refs.filterIp.value);
+    handleFilterChange(e) {
+        this.props.updateFilter(e.target.value);
     }
 
     render() {
         let filterStyle = {
-            float: 'right',
             marginRight: '10px',
             borderRadius: '8%',
             padding: '4px',
-            border: '1px solid #bfbfbf'
+            borderStyle: 'none',
+            borderBottom: '1px dotted #bfbfbf',
+            outline: 'none'
         };
 
+        let filterWrapper = {
+        	width: '50%',
+        	float: 'right',
+        	display: 'inline-block',
+        	textAlign: 'right'
+        }
+
         return (
-			<div>
+			<div style={filterWrapper}>
 				<input style={filterStyle} ref='filterIp' placeholder='Filter products...' onChange={this.handleFilterChange.bind(this)} />
 				<br />
 				<br />
@@ -237,7 +246,8 @@ class Product extends React.Component {
             padding: '8px',
             color: '#ffffff',
             float: 'right',
-            marginRight: '10%'
+            marginRight: '10%',
+            outline: 'none'
         };
 
         let productName = {
@@ -289,8 +299,8 @@ class Cart extends React.Component {
     }
 
     // When cart component receives a props, that means new item is added to the cart
-    // Then check whether the product already exists, then update only the
-    // quantity, else add with the quantity of 1.
+    // Then check whether the product already exists, if it does, update only the
+    // quantity, else add with the product with its quantity of 1.
     componentWillReceiveProps(next_props) {
         if(next_props.product === undefined) {
             return false;
@@ -408,14 +418,16 @@ class CartProduct extends React.Component {
             background: '#9aff99',
             borderRadius: '50%',
             border: 'none',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            outline: 'none'
         }
 
         let removecartButton = {
             background: '#ff8884',
             borderRadius: '50%',
             border: 'none',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            outline: 'none'
         }
 
         let outerBorder = {
@@ -470,6 +482,20 @@ class Grouper extends React.Component {
 			<div style={grouperStyle}>
                 {this.props.grouperName}
 			</div>
+        )
+    }
+}
+
+class EvilInc extends React.Component {
+    render() {
+    	let evilStyle = {
+    		verticalAlign: 'middle',
+    		fontWeight: 'bold',
+    		fontSize: '20px'
+    	}
+
+        return (
+        	<span style={evilStyle}> <img src="evil.jpg" /> Evil Inc.</span>
         )
     }
 }
