@@ -1,152 +1,5 @@
-import React from 'react';
-
-class App extends React.Component {
-    constructor () {
-        super();
-
-        this.state = {
-            products: {
-                "SD2014-CF-P":{
-                    "category": "electronics",
-                    "name":"Nexus 6",
-                    "price": 3500,
-                    "brand": "LG",
-                    "sku": "SD2014-CF-P"
-                },
-                "SD2015-CF-P":{
-                    "category": "electronics",
-                    "name":"Apple Watch",
-                    "price": 6000,
-                    "brand":"Apple",
-                    "sku":"SD2015-CF-P"
-                },
-                "SD2016-CF-P":{
-                    "category": "electronics",
-                    "name":"Havels Switch",
-                    "price": 120,
-                    "brand":"Havels",
-                    "sku":"SD2016-CF-P"
-                },
-                "SD2017-CF-P":{
-                    "category": "electronics",
-                    "name":"Laser Mouse",
-                    "price": 450,
-                    "brand":"Logitech",
-                    "sku":"SD2017-CF-P"
-                },
-                "SD2018-CF-P":{
-                    "category": "electronics",
-                    "name":"Mini Keyboard",
-                    "price": 850,
-                    "brand":"Logitech",
-                    "sku":"SD2018-CF-P"
-                },
-                "SD2019-CF-P":{
-                    "category": "clothing",
-                    "name":"Tracks",
-                    "price": 120,
-                    "brand":"Nike",
-                    "sku":"SD2019-CF-P"
-                },
-                "SD2020-CF-P":{
-                    "category": "clothing",
-                    "name":"Swim Suit",
-                    "price": 120,
-                    "brand":"Puma",
-                    "sku":"SD2020-CF-P"
-                }
-            }
-        };
-    }
-
-    // Filter Products By matching name and then set the state
-    // for App with the filtered products.
-    filterProductsByName(search_text) {
-        let products = {};
-        for(let key in this.props.products) {
-            let product = this.props.products[key];
-            let matched_name = product.name.match(new RegExp(".*?" + search_text + ".*?", "i"));
-            if(matched_name != [''] && matched_name != null) {
-                products[key] = product
-            } else if (search_text == '') {
-                products[key] = product
-            }
-        }
-
-        this.setState({products: products, cart_product: undefined})
-    }
-
-    // Whenever a add to cart button is clicked, this will update the cart_product
-    // state of App component to the clicked product.
-    updateCartProducts(product_sku) {
-        let cart_product;
-
-        for(let key in this.props.products) {
-            let product = this.props.products[key]
-            if(product.sku == product_sku) {
-                cart_product = product;
-                break;
-            }
-        }
-
-        this.setState({cart_product: cart_product})
-    }
-
-    render() {
-
-        let group_products = {};
-        for(let key in this.state.products){
-            let product = this.state.products[key];
-            if(group_products[product.category] === undefined) {
-                group_products[product.category] = [product]
-            } else {
-                group_products[product.category].push(product)
-            }
-        }
-
-        let render_products = [];
-        for(let key in group_products) {
-            let category_products = group_products[key];
-            render_products.push(<Grouper grouperName={key} key={key}/>)
-
-            for(let i = 0; i < category_products.length; i++ ) {
-                let category_product = category_products[i]
-                render_products.push(<Product key={category_product.sku} product={category_product} updateCartProducts={this.updateCartProducts.bind(this)} />)
-            }
-        }
-
-        let Appstyle = {
-            width: '60%',
-            borderRight: '1px solid #bfbfbf',
-            display: 'inline-block'
-        }
-
-        let cartStyle = {
-            width: '35%',
-            display: 'inline-block',
-            verticalAlign: 'top',
-            marginLeft: '4px'
-        }
-
-        let parentContainer = {
-            fontFamily: 'sans-serif',
-        }
-
-        return (
-			<div unselectable="on" style={parentContainer}>
-				<div style={Appstyle}>
-                    <EvilInc />
-					<Filter updateFilter={this.filterProductsByName.bind(this)} />
-                    {render_products}
-				</div>
-				<Cart style={cartStyle} product={this.state.cart_product}/>
-				<hr />
-			</div>
-        );
-    }
-}
-
-App.defaultProps = {
+import React, { Component } from 'react';
+var PRODUCTS = {
     products: {
         "SD2014-CF-P":{
             "category": "electronics",
@@ -199,6 +52,106 @@ App.defaultProps = {
         }
     }
 }
+class App extends React.Component {
+    constructor () {
+        super();
+
+        this.state = PRODUCTS;
+    }
+
+    // Filter Products By matching name and then set the state
+    // for App with the filtered products.
+    filterProductsByName(search_text) {
+        let products = {};
+        let default_all_products = PRODUCTS.products;
+        for(let key in default_all_products) {
+            let product = default_all_products[key];
+            let matched_name = product.name.match(new RegExp(".*?" + search_text + ".*?", "i"));
+            if(matched_name != [''] && matched_name != null) {
+                products[key] = product
+            } else if (search_text == '') {
+                products[key] = product
+            }
+        }
+
+        this.setState({
+            products: products, 
+            cart_product: undefined
+        })
+    }
+
+    // Whenever a add to cart button is clicked, this will update the cart_product
+    // state of App component to the clicked product.
+    updateCartProducts(product_sku) {
+        let cart_product;
+        let default_all_products = PRODUCTS.products;
+
+        for(let key in default_all_products) {
+            let product = default_all_products[key]
+            if(product.sku == product_sku) {
+                cart_product = product;
+                break;
+            }
+        }
+
+        this.setState({cart_product: cart_product})
+    }
+
+    render() {
+
+        let group_products = {};
+        let render_products = [];
+
+        for(let key in this.state.products){
+            let product = this.state.products[key];
+            if(group_products[product.category] === undefined) {
+                group_products[product.category] = [product]
+            } else {
+                group_products[product.category].push(product)
+            }
+        }
+
+        
+        for(let key in group_products) {
+            let category_products = group_products[key];
+            render_products.push(<Grouper grouperName={key} key={key}/>)
+
+            for(let i = 0; i < category_products.length; i++ ) {
+                let category_product = category_products[i]
+                render_products.push(<Product key={category_product.sku} product={category_product} updateCartProducts={this.updateCartProducts.bind(this)} />)
+            }
+        }
+
+        let Appstyle = {
+            width: '60%',
+            borderRight: '1px solid #bfbfbf',
+            display: 'inline-block'
+        }
+
+        let cartStyle = {
+            width: '35%',
+            display: 'inline-block',
+            verticalAlign: 'top',
+            marginLeft: '4px'
+        }
+
+        let parentContainer = {
+            fontFamily: 'sans-serif',
+        }
+
+        return (
+			<div unselectable="on" style={parentContainer}>
+				<div style={Appstyle}>
+                    <EvilInc />
+					<Filter updateFilter={this.filterProductsByName.bind(this)} />
+                    {render_products}
+				</div>
+				<Cart style={cartStyle} product={this.state.cart_product}/>
+				<hr />
+			</div>
+        );
+    }
+}
 
 class Filter extends React.Component {
     handleFilterChange(e) {
@@ -224,7 +177,7 @@ class Filter extends React.Component {
 
         return (
 			<div style={filterWrapper}>
-				<input style={filterStyle} ref='filterIp' placeholder='Filter products...' onChange={this.handleFilterChange.bind(this)} />
+				<input style={filterStyle} placeholder='Filter products...' onChange={this.handleFilterChange.bind(this)}/>
 				<br />
 				<br />
 			</div>
@@ -233,8 +186,8 @@ class Filter extends React.Component {
 }
 
 class Product extends React.Component {
-    handleCartChange() {
-        this.props.updateCartProducts(this.refs.addToCartButton.value);
+    handleCartChange(e) {
+        this.props.updateCartProducts(e.target.value);
     }
 
     render() {
@@ -282,7 +235,7 @@ class Product extends React.Component {
 				<span style={productName}>{this.props.product.name} </span> <span style={priceStyle}>₹{this.props.product.price} </span>
 				<div style={buttonContainer}>
 					<span >{this.props.product.brand} </span> - <span style={category}>{this.props.product.category} </span>
-					<button style={addButtonStyle} onClick={this.handleCartChange.bind(this)} ref='addToCartButton' value={this.props.product.sku}> Add to cart </button>
+					<button style={addButtonStyle} onClick={this.handleCartChange.bind(this)} value={this.props.product.sku}> Add to cart </button>
 				</div>
 				<br />
 				<br />
@@ -401,15 +354,8 @@ class Cart extends React.Component {
 }
 
 class CartProduct extends React.Component {
-    handleProductQuantityChange(operation) {
-        let product_sku;
-        if('add' == operation) {
-            product_sku = this.refs.addQuantity.value
-        } else {
-            product_sku = this.refs.removeQuantity.value
-        }
-
-        this.props.updateCardProductsQuantity(product_sku, operation)
+    handleProductQuantityChange(operation, e) {
+        this.props.updateCardProductsQuantity(e.target.value, operation)
     }
 
     render() {
@@ -457,9 +403,9 @@ class CartProduct extends React.Component {
 				<br />
 				<span style={quantity}>Quantity:</span> <span style={quantityValue}>{this.props.product.quantity}</span>
 				&nbsp; &nbsp;
-				<button style={addcartButton} ref="addQuantity" value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'add')}>+</button>
+				<button style={addcartButton} value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'add')}>+</button>
 				&nbsp;
-				<button style={removecartButton} ref="removeQuantity" value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'remove')}>-</button>
+				<button style={removecartButton} value={this.props.product.sku} onClick={this.handleProductQuantityChange.bind(this, 'remove')}>-</button>
 			</div>
         )
     }
